@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Script Hub</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f2f2f2;
+    }
+    .container {
+      max-width: 420px;
+      margin: auto;
+      padding: 16px;
+    }
+    header {
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      margin: 10px 0 16px;
+    }
+    .search {
+      width: 100%;
+      padding: 12px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .card img {
+      width: 100%;
+      display: block;
+    }
+    .card-content {
+      padding: 16px;
+      text-align: center;
+    }
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+    .btn {
+      display: block;
+      background: #000;
+      color: #fff;
+      text-decoration: none;
+      padding: 14px;
+      border-radius: 30px;
+      font-weight: bold;
+    }
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    .page-btn {
+      padding: 8px 14px;
+      border-radius: 12px;
+      border: none;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      cursor: pointer;
+    }
+    .page-btn.active {
+      background: #000;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>SCRIPT HUB</header>
+    <input class="search" type="text" id="search" placeholder="Cari script...">
+    <div id="list"></div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+
+  <script>
+    const scripts = Array.from({ length: 50 }, (_, i) => ({
+      title: `Script Hub #${i + 1}`,
+      img: `https://via.placeholder.com/400x220?text=Script+${i + 1}`,
+      link: 'https://example.com'
+    }));
+
+    const perPage = 5;
+    let currentPage = 1;
+
+    function render() {
+      const search = document.getElementById('search').value.toLowerCase();
+      const filtered = scripts.filter(s => s.title.toLowerCase().includes(search));
+      const start = (currentPage - 1) * perPage;
+      const items = filtered.slice(start, start + perPage);
+
+      document.getElementById('list').innerHTML = items.map(s => `
+        <div class="card">
+          <img src="${s.img}">
+          <div class="card-content">
+            <div class="title">${s.title}</div>
+            <a class="btn" href="${s.link}" target="_blank">GET SCRIPT</a>
+          </div>
+        </div>
+      `).join('');
+
+      const pages = Math.ceil(filtered.length / perPage);
+      document.getElementById('pagination').innerHTML = Array.from({length: pages}, (_, i) => `
+        <button class="page-btn ${i+1===currentPage?'active':''}" onclick="goto(${i+1})">${i+1}</button>
+      `).join('');
+    }
+
+    function goto(p) {
+      currentPage = p;
+      render();
+    }
+
+    document.getElementById('search').addEventListener('input', () => {
+      currentPage = 1;
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
